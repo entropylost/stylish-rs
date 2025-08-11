@@ -1,3 +1,5 @@
+use core::ops::{Add, AddAssign};
+
 use crate::{Display, Formatter, Result, Style, Write};
 
 /// An attributed version of [`alloc::string::String`] which has a specific
@@ -90,5 +92,40 @@ impl From<alloc::string::String> for String {
             string,
             styles: alloc::vec![(0, Style::default())],
         }
+    }
+}
+
+impl AddAssign<String> for String {
+    #[inline]
+    fn add_assign(&mut self, rhs: String) {
+        let offset = self.string.len();
+        self.string.push_str(&rhs.string);
+        for (index, style) in rhs.styles {
+            self.styles.push((index + offset, style));
+        }
+    }
+}
+impl Add<String> for String {
+    type Output = Self;
+
+    #[inline]
+    fn add(mut self, rhs: String) -> Self::Output {
+        self += rhs;
+        self
+    }
+}
+impl AddAssign<&str> for String {
+    #[inline]
+    fn add_assign(&mut self, rhs: &str) {
+        self.write_str(rhs, Style::default()).unwrap();
+    }
+}
+impl Add<&str> for String {
+    type Output = Self;
+
+    #[inline]
+    fn add(mut self, rhs: &str) -> Self::Output {
+        self += rhs;
+        self
     }
 }
