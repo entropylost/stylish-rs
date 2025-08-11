@@ -52,6 +52,25 @@ mod tests {
     }
 
     #[test]
+    fn equal_conversions() {
+        assert_eq!(
+            stylish::ansi::format!("abcd"),
+            stylish::ansi::format!("{:s}", stylish::String::from("abcd"))
+        );
+    }
+
+    #[test]
+    fn string_addition() {
+        let mut s = stylish::String::new();
+        s += stylish::format!("{:(fg=red)}", "Hello");
+        s += stylish::format!("{:(bg=blue)}", "World");
+        assert_eq!(
+            stylish::ansi::format!("{:s}", s),
+            stylish::ansi::format!("{:(fg=red)}{:(bg=blue)}", "Hello", "World")
+        )
+    }
+
+    #[test]
     fn dyn_display() {
         let x: &dyn std::fmt::Display = &1;
         assert_eq!(stylish::plain::format!("{}", *x), "1");

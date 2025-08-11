@@ -85,6 +85,12 @@ impl Display for String {
     }
 }
 
+impl From<&str> for String {
+    #[inline]
+    fn from(string: &str) -> Self {
+        Self::from(alloc::string::String::from(string))
+    }
+}
 impl From<alloc::string::String> for String {
     #[inline]
     fn from(string: alloc::string::String) -> Self {
