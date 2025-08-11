@@ -82,3 +82,13 @@ impl Display for String {
         Ok(())
     }
 }
+
+impl From<alloc::string::String> for String {
+    #[inline]
+    fn from(string: alloc::string::String) -> Self {
+        Self {
+            string,
+            styles: alloc::vec![(0, Style::default())],
+        }
+    }
+}
